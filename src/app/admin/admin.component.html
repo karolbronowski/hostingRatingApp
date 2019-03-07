@@ -1,0 +1,189 @@
+<div style="height: 20px;"></div>
+<div class="row">
+  <style>
+    th {
+          background-color: #3f51b5;
+          color: white;
+          padding: 20px;
+          font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+            sans-serif;
+        }
+        tr {
+          background-color: #275bd7;
+          color: white;
+        }
+        td {
+          padding: 10px;
+          text-align: center;
+        }
+      </style>
+  <div class="" style="width:100%; overflow:auto;">
+    <table style="width:100%;padding: 20px;">
+      <tbody>
+        <tr>
+          <th>Firma</th>
+          <th>Zdjęcie</th>
+          <th></th>
+        </tr>
+        <tr *ngFor="let b of brandsList">
+          <td>{{b.name}}</td>
+          <td [ngStyle]="{'background-image':'url(' + b.imageUrl + ')'}" style="border: 1px solid  #3f51b5; background-position: center;background-repeat: no-repeat;background-color:white;width: 140px; height: 40px;"></td>
+          <td>
+            <!-- <button mat-raised-button color="primary">Edytuj</button> -->
+            <button mat-raised-button color="warn">Usuń</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="" style="width:100%; overflow:auto;">
+    <table style="width:100%;padding: 20px;">
+      <tbody>
+        <tr>
+          <th>Firma</th>
+          <th>Zdjęcie</th>
+          <th>Pakiet</th>
+        <th>Pojemność konta</th>
+        <th>Transfer miesięczny</th>
+        <th>Konta e-mail</th>
+        <th>Domeny</th>
+        <th>Bazy danych</th>
+        <th>Konta ftp</th>
+        <th>Cena za pierwszy rok</th>
+        <th>Cena za kolejne lata</th>
+          <th></th>
+        </tr>
+
+        <tr *ngFor="let b of brandPackagesList">
+          <td>{{b.brand.name}}</td>
+          <td [ngStyle]="{'background-image':'url(' + b.brand.imageUrl + ')'}" style="border: 1px solid  #3f51b5; background-position: center;background-repeat: no-repeat;background-color:white;width: 140px; height: 40px;"></td>
+          <td>{{b.packageName}}</td>
+          <td><b>{{b.accountCapacity}}</b> GB</td>
+          <td><b>{{b.monthlyTransfer}}</b> GB</td>
+          <td><b>{{b.emailAccount}}</b></td>
+          <td><b>{{b.domains}}</b></td>
+          <td><b>{{b.databases}}</b></td>
+          <td><b>{{b.ftpAccounts}}</b></td>
+          <td><b>{{b.priceForYear}}</b> PLN / rok</td>
+          <td><b>{{b.priceForNextYear}}</b> PLN / rok</td>
+          <td>
+            <!-- <button mat-raised-button color="primary">Edytuj</button> -->
+            <button mat-raised-button color="warn" (click)="removeBrandPackage(b.id)">Usuń</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <mat-card>
+      <h2>Dodaj firmę</h2>
+      <mat-divider></mat-divider>
+      <form (ngSubmit)="onSubmitBrand()" [formGroup]="addBrandForm">
+        <h1 mat-dialog-title></h1>
+        <br />
+        <div mat-dialog-content class="dialog-content">
+          <mat-form-field>
+            <input name="name" formControlName="name" matInput placeholder="Podaj nazwę firmy">
+            <mat-error *ngIf="!addBrandForm.controls.name.valid && addBrandForm.controls.name.errors.length>0">
+              {{addBrandForm.controls.name.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input name="imageUrl" formControlName="imageUrl" matInput placeholder="Podaj link do zdjęcia">
+            <mat-error *ngIf="!addBrandForm.controls.imageUrl.valid && addBrandForm.controls.imageUrl.errors.length>0">
+              {{addBrandForm.controls.imageUrl.errors}}</mat-error>
+          </mat-form-field>
+
+        </div>
+        <div mat-dialog-actions>
+          <button mat-button (click)="onNoClick()">Anuluj</button>
+          <button mat-button cdkFocusInitial type="submit" [disabled]="!addBrandForm.valid">Dodaj</button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+  <div class="col-md-6">
+    <mat-card>
+      <h2>Dodaj pakiet</h2>
+      <mat-divider></mat-divider>
+      <form (ngSubmit)="onSubmitBrandPackage()" [formGroup]="addBrandPackageForm">
+        <h1 mat-dialog-title></h1>
+        <br />
+        <div mat-dialog-content class="dialog-content">
+          <mat-form-field>
+            <mat-select formControlName="brandId" placeholder="Wybierz firmę">
+              <mat-option *ngFor="let o of brands" [value]="o.value">
+                {{o.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br />
+
+          <mat-form-field>
+            <input name="packageName" formControlName="packageName" matInput placeholder="Podaj nazwe pakietu">
+            <mat-error *ngIf="!addBrandPackageForm.controls.packageName.valid && addBrandPackageForm.controls.packageName.errors.length>0">
+              {{addBrandPackageForm.controls.packageName.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input name="accountCapacity" formControlName="accountCapacity" matInput placeholder="Pojemność konta (w GB, bez GB)">
+            <mat-error *ngIf="!addBrandPackageForm.controls.accountCapacity.valid && addBrandPackageForm.controls.accountCapacity.errors.length>0">
+              {{addBrandPackageForm.controls.accountCapacity.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input name="monthlyTransfer" formControlName="monthlyTransfer" matInput placeholder="Miesięczny transfer (w GB, bez GB)">
+            <mat-error *ngIf="!addBrandPackageForm.controls.monthlyTransfer.valid && addBrandPackageForm.controls.monthlyTransfer.errors.length>0">
+              {{addBrandPackageForm.controls.monthlyTransfer.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input name="emailAccount" formControlName="emailAccount" matInput placeholder="Ilość kont e-mail">
+            <mat-error *ngIf="!addBrandPackageForm.controls.emailAccount.valid && addBrandPackageForm.controls.emailAccount.errors.length>0">
+              {{addBrandPackageForm.controls.emailAccount.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input name="domains" formControlName="domains" matInput placeholder="Ilość domen">
+            <mat-error *ngIf="!addBrandPackageForm.controls.domains.valid && addBrandPackageForm.controls.domains.errors.length>0">
+              {{addBrandPackageForm.controls.domains.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input name="databases" formControlName="databases" matInput placeholder="Ilość baz danych">
+            <mat-error *ngIf="!addBrandPackageForm.controls.databases.valid && addBrandPackageForm.controls.databases.errors.length>0">
+              {{addBrandPackageForm.controls.databases.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input name="ftpAccounts" formControlName="ftpAccounts" matInput placeholder="Ilość kont FTP">
+            <mat-error *ngIf="!addBrandPackageForm.controls.ftpAccounts.valid && addBrandPackageForm.controls.ftpAccounts.errors.length>0">
+              {{addBrandPackageForm.controls.ftpAccounts.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input name="priceForYear" formControlName="priceForYear" matInput placeholder="Cena za pierwszy rok">
+            <mat-error *ngIf="!addBrandPackageForm.controls.priceForYear.valid && addBrandPackageForm.controls.priceForYear.errors.length>0">
+              {{addBrandPackageForm.controls.priceForYear.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+          <mat-form-field>
+            <input name="priceForNextYear" formControlName="priceForNextYear" matInput placeholder="Cena za kolejne lata">
+            <mat-error *ngIf="!addBrandPackageForm.controls.priceForNextYear.valid && addBrandPackageForm.controls.priceForNextYear.errors.length>0">
+              {{addBrandPackageForm.controls.priceForNextYear.errors}}</mat-error>
+          </mat-form-field>
+          <br />
+
+          <br />
+        </div>
+        <div mat-dialog-actions>
+          <button mat-button (click)="onNoClick()">Anuluj</button>
+          <button mat-button cdkFocusInitial type="submit" [disabled]="!addBrandPackageForm.valid">Dodaj</button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

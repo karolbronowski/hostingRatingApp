@@ -1,0 +1,51 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    [ngClass]="{hidden: !(isHandset$ | async)}"
+    fixedInViewport="false"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async)">
+    <mat-toolbar color="primary">Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/" routerLinkActive="active">Ranking</a>
+     
+      <a mat-list-item *ngIf="isAuthenticated" routerLink="/account" routerLinkActive="active">Moje konto</a>
+      <a mat-list-item *ngIf="isAuthenticated" (click)="logout()" routerLinkActive="active">Wyloguj</a>
+      
+      <a mat-list-item  *ngIf="!isAuthenticated" routerLink="/login" routerLinkActive="active">Logowanie</a>
+      <a mat-list-item  *ngIf="!isAuthenticated" routerLink="/register" routerLinkActive="active">Rejestracja</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span *ngIf="!(isHandset$ | async)" routerLink="/" routerLinkActive="active">Ranking hostingowy</span>
+      <!-- <a *ngIf="!(isHandset$ | async)" [matMenuTriggerFor]="menu">s</a>
+      <a *ngIf="!(isHandset$ | async)" routerLink="/privacy-policy" routerLinkActive="active">s</a>
+      <a *ngIf="!(isHandset$ | async)" routerLink="/rules" routerLinkActive="active">s</a>
+      <a *ngIf="!(isHandset$ | async)" routerLink="/knowledge-base" routerLinkActive="active">x</a> -->
+      <mat-menu #menu="matMenu">
+        <button routerLink="/" routerLinkActive="active" mat-menu-item>Ranking</button>
+      </mat-menu>
+      
+      
+      <span class="spacer"></span>
+      <a *ngIf="isAuthenticated && !(isHandset$ | async) && !isAdmin" routerLink="/account" routerLinkActive="active">Moje konto</a>
+      <a *ngIf="isAuthenticated && !(isHandset$ | async) && isAdmin" routerLink="/admin" routerLinkActive="active">Admin</a>
+      <a *ngIf="isAuthenticated && !(isHandset$ | async)" (click)="logout()" routerLinkActive="active">Wyloguj się</a>
+      <a *ngIf="!isAuthenticated && !(isHandset$ | async)" routerLink="/login" routerLinkActive="active">Logowanie</a> 
+      <a *ngIf="!isAuthenticated && !(isHandset$ | async)" routerLink="/register" routerLinkActive="active">Rejestracja</a>
+      
+    </mat-toolbar>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

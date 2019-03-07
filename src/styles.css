@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+.spacer {
+    /* This fills the remaining space, by using flexbox. 
+       Every toolbar row uses a flexbox row layout. */
+    flex: 1 1 auto;
+  }
+  body {
+    margin:0;
+    height: 100%;
+}
+
+@media (min-width:768px){
+  .cart-md {
+  z-index: 99;
+  position:absolute;
+  right:0;
+  }
+}
+.row {
+  margin-left: 0!important;
+  margin-right: 0!important;
+}
